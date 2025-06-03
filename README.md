@@ -4,7 +4,7 @@ World Facts Explorer is a web app that lets users discover interesting facts abo
 # Presentation
 [Live Preview](https://world-facts-explorer.vercel.app/)
 
-https://github.com/user-attachments/assets/29612bfd-0290-4716-942f-330f0a83f9eb
+![image alt](https://github.com/xPapashi/WorldFactsExplorer/blob/1ed1ab8bce609d7981df32f97cda67b3a19e05d7/img1.PNG)
 
 
 ## Tech Stack:
