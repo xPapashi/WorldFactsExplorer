@@ -1,76 +1,99 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <section class="mb-6">
-        <h2 class="text-2xl font-semibold mb-3">Explore Countries</h2>
+<section class="mb-8">
+    <h2 class="text-3xl font-bold mb-4 text-center">🌍 Explore Countries</h2>
+    <div class="flex justify-center mb-6">
         <input
             type="text"
             id="search"
             placeholder="Search by country name..."
-            class="w-full max-w-md p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full max-w-lg p-4 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
-    </section>
+    </div>
+</section>
 
-    <section class="grid md:grid-cols-2 gap-6">
-        <ul id="country-list" class="space-y-2"></ul>
-        <div id="country-details" class="bg-white p-6 rounded-lg shadow"></div>
-    </section>
+<section>
+    <ul id="country-list" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></ul>
+</section>
 
-    <script>
-    async function fetchCountries(query="") {
-        let url = "/countries";
-        if (query) url += "?name=" + encodeURIComponent(query);
-        const res = await fetch(url);
-        return await res.json();
-    }
+<!-- Modal for country details -->
+<div id="country-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full relative">
+        <button id="close-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+        <div id="country-details"></div>
+    </div>
+</div>
 
-    async function showCountries() {
-        const countries = await fetchCountries();
-        const list = document.getElementById("country-list");
-        list.innerHTML = "";
-        countries.forEach(c => {
-            const li = document.createElement("li");
-            li.textContent = c['@name'];
-            li.className = "bg-white p-3 rounded-md shadow cursor-pointer hover:bg-blue-100 transition";
-            li.onclick = () => showCountryDetails(c['@name']);
-            list.appendChild(li);
-        });
-    }
+<script>
+async function fetchCountries(query="") {
+    let url = "/countries";
+    if (query) url += "?name=" + encodeURIComponent(query);
+    const res = await fetch(url);
+    return await res.json();
+}
 
-    async function showCountryDetails(name) {
-        const res = await fetch(`/countries/${encodeURIComponent(name)}`);
-        if (!res.ok) return;
-        const c = await res.json();
-        const details = document.getElementById("country-details");
-        details.innerHTML = `
-            <h3 class="text-xl font-bold mb-4">${c['@name']}</h3>
-            <ul class="space-y-2 text-gray-700">
-                <li><strong>Capital:</strong> ${c.capital}</li>
-                <li><strong>Population:</strong> ${c.population}</li>
-                <li><strong>Language:</strong> ${c.language}</li>
-                <li><strong>Currency:</strong> ${c.currency}</li>
-                <li><strong>Timezone:</strong> ${c.timezone}</li>
-            </ul>
-        `;
-    }
+function createCountryCard(country) {
+    const li = document.createElement("li");
+    li.className = "bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer flex flex-col items-center p-6 border border-gray-100 hover:border-blue-400";
+    li.innerHTML = `
+        <div class="text-4xl mb-2">🌐</div>
+        <div class="font-semibold text-lg mb-1 text-center">${country['@name']}</div>
+        <div class="text-sm text-gray-500 mb-2 text-center">${country.capital || "No capital"}</div>
+        <div class="text-xs text-gray-400 text-center">${country.region || ""}</div>
+    `;
+    li.onclick = () => showCountryDetails(country['@name']);
+    return li;
+}
 
-    document.getElementById("search").addEventListener("input", async function() {
-        const query = this.value.toLowerCase();
-        const countries = await fetch("/countries").then(r => r.json());
-        const filtered = countries.filter(c => c['@name'].toLowerCase().includes(query));
-        const list = document.getElementById("country-list");
-        list.innerHTML = "";
-        filtered.forEach(c => {
-            const li = document.createElement("li");
-            li.textContent = c['@name'];
-            li.className = "bg-white p-3 rounded-md shadow cursor-pointer hover:bg-blue-100 transition";
-            li.onclick = () => showCountryDetails(c['@name']);
-            list.appendChild(li);
-        });
-        document.getElementById("country-details").innerHTML = "";
+async function showCountries() {
+    const countries = await fetchCountries();
+    const list = document.getElementById("country-list");
+    list.innerHTML = "";
+    countries.forEach(c => {
+        list.appendChild(createCountryCard(c));
     });
+}
 
-    showCountries();
-    </script>
+async function showCountryDetails(name) {
+    const res = await fetch(`/countries/${encodeURIComponent(name)}`);
+    if (!res.ok) return;
+    const c = await res.json();
+    const details = document.getElementById("country-details");
+    details.innerHTML = `
+        <h3 class="text-2xl font-bold mb-4 text-center">${c['@name']}</h3>
+        <ul class="space-y-2 text-gray-700">
+            <li><strong>Capital:</strong> ${c.capital}</li>
+            <li><strong>Population:</strong> ${c.population}</li>
+            <li><strong>Language:</strong> ${c.language}</li>
+            <li><strong>Currency:</strong> ${c.currency}</li>
+            <li><strong>Timezone:</strong> ${c.timezone}</li>
+        </ul>
+    `;
+    document.getElementById("country-modal").classList.remove("hidden");
+}
+
+document.getElementById("search").addEventListener("input", async function() {
+    const query = this.value.toLowerCase();
+    const countries = await fetch("/countries").then(r => r.json());
+    const filtered = countries.filter(c => c['@name'].toLowerCase().includes(query));
+    const list = document.getElementById("country-list");
+    list.innerHTML = "";
+    filtered.forEach(c => {
+        list.appendChild(createCountryCard(c));
+    });
+});
+
+document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("country-modal").classList.add("hidden");
+});
+
+document.getElementById("country-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) {
+        document.getElementById("country-modal").classList.add("hidden");
+    }
+});
+
+showCountries();
+</script>
 {% endblock %}
