@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>World Facts Explorer 🌍</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
 </head>
 <body>
-    <div class="navbar">
+    <div class="navbar bg-blue-900 text-white p-4 shadow-md color-red-500">
         <span class="navbar-brand">🌍 World Facts Explorer</span>
         <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
         <a class="navbar-item" href="{{ url_for('about') }}">About</a>
