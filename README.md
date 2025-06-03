@@ -1,3 +1,21 @@
+# World Facts Explorer
+World Facts Explorer is a web app that lets users discover interesting facts about countries around the world, including population, geography, and cultural information.
+
+# Presentation
+[Live Preview](https://world-facts-explorer.vercel.app/)
+
+https://github.com/user-attachments/assets/29612bfd-0290-4716-942f-330f0a83f9eb
+
+
+## Tech Stack:
+
+- **Frontend:** HTML
+- **Backend:** Flask (Python)
+- **Styling:** Tailwind CSS
+- **Animation:** Framer Motion
+- **API/Data:** REST Countries API
+- **Deployment:** Vercel
+
 # Flask Template
 
 This sample repo contains the recommended structure for a Python Flask project. In this sample, we use `flask` to build a web application and the `pytest` to run tests.
