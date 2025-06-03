@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import xmltodict
 from flask import Flask, jsonify, render_template, send_file, request, abort, Response
 from io import BytesIO
+from urllib.parse import unquote
 
 app = Flask(__name__)
 
@@ -62,6 +63,7 @@ def countries():
 
 @app.route("/countries/<name>")
 def country_by_name(name):
+    name = unquote(name)
     xml_bytes = get_xml_data()
     countries = parse_xml_to_dict(xml_bytes)
     for c in countries:
