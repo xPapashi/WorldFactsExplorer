@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to your Flask app! {% endblock %}</h1>
-    <h2>Explore Countries</h2>
-    <input type="text" id="search" placeholder="Search by country name..." style="width: 250px; padding: 5px;">
-    <ul id="country-list"></ul>
-    <div id="country-details"></div>
+
+    <section class="mb-6">
+        <h2 class="text-2xl font-semibold mb-3">Explore Countries</h2>
+        <input
+            type="text"
+            id="search"
+            placeholder="Search by country name..."
+            class="w-full max-w-md p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-6">
+        <ul id="country-list" class="space-y-2"></ul>
+        <div id="country-details" class="bg-white p-6 rounded-lg shadow"></div>
+    </section>
+
     <script>
     async function fetchCountries(query="") {
         let url = "/countries";
@@ -21,7 +32,7 @@
         countries.forEach(c => {
             const li = document.createElement("li");
             li.textContent = c['@name'];
-            li.style.cursor = "pointer";
+            li.className = "bg-white p-3 rounded-md shadow cursor-pointer hover:bg-blue-100 transition";
             li.onclick = () => showCountryDetails(c['@name']);
             list.appendChild(li);
         });
@@ -33,13 +44,13 @@
         const c = await res.json();
         const details = document.getElementById("country-details");
         details.innerHTML = `
-            <h3>${c['@name']}</h3>
-            <ul>
-                <li><b>Capital:</b> ${c.capital}</li>
-                <li><b>Population:</b> ${c.population}</li>
-                <li><b>Language:</b> ${c.language}</li>
-                <li><b>Currency:</b> ${c.currency}</li>
-                <li><b>Timezone:</b> ${c.timezone}</li>
+            <h3 class="text-xl font-bold mb-4">${c['@name']}</h3>
+            <ul class="space-y-2 text-gray-700">
+                <li><strong>Capital:</strong> ${c.capital}</li>
+                <li><strong>Population:</strong> ${c.population}</li>
+                <li><strong>Language:</strong> ${c.language}</li>
+                <li><strong>Currency:</strong> ${c.currency}</li>
+                <li><strong>Timezone:</strong> ${c.timezone}</li>
             </ul>
         `;
     }
@@ -53,7 +64,7 @@
         filtered.forEach(c => {
             const li = document.createElement("li");
             li.textContent = c['@name'];
-            li.style.cursor = "pointer";
+            li.className = "bg-white p-3 rounded-md shadow cursor-pointer hover:bg-blue-100 transition";
             li.onclick = () => showCountryDetails(c['@name']);
             list.appendChild(li);
         });
